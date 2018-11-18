@@ -8,16 +8,20 @@ val macwire = "com.softwaremill.macwire" %% "macros" % "2.3.0" % "provided"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4" % Test
 
 lazy val `store` = (project in file("."))
-  .aggregate(`store-api`, `store-impl`)
+  .aggregate(
+    `catalog-api`,
+    `catalog-impl`
+  )
 
-lazy val `store-api` = (project in file("store-api"))
+
+lazy val `catalog-api` = (project in file("catalog-api"))
   .settings(
     libraryDependencies ++= Seq(
       lagomScaladslApi
     )
   )
 
-lazy val `store-impl` = (project in file("store-impl"))
+lazy val `catalog-impl` = (project in file("catalog-impl"))
   .enablePlugins(LagomScala)
   .settings(
     libraryDependencies ++= Seq(
@@ -29,5 +33,6 @@ lazy val `store-impl` = (project in file("store-impl"))
     )
   )
   .settings(lagomForkedTestSettings: _*)
-  .dependsOn(`store-api`)
+  .dependsOn(`catalog-api`)
+
 
