@@ -13,17 +13,17 @@ import com.softwaremill.macwire._
 class CatalogLoader extends LagomApplicationLoader {
 
   override def load(context: LagomApplicationContext): LagomApplication =
-    new StoreApplication(context) {
+    new CatalogApplication(context) {
       override def serviceLocator: ServiceLocator = NoServiceLocator
     }
 
   override def loadDevMode(context: LagomApplicationContext): LagomApplication =
-    new StoreApplication(context) with LagomDevModeComponents
+    new CatalogApplication(context) with LagomDevModeComponents
 
   override def describeService = Some(readDescriptor[CatalogService])
 }
 
-abstract class StoreApplication(context: LagomApplicationContext)
+abstract class CatalogApplication(context: LagomApplicationContext)
   extends LagomApplication(context)
     with CassandraPersistenceComponents
     with LagomKafkaComponents

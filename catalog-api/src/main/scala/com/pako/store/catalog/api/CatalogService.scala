@@ -1,11 +1,11 @@
 package com.pako.store.catalog.api
 
-import akka.{Done, NotUsed}
+import akka.NotUsed
 import com.lightbend.lagom.scaladsl.api.broker.Topic
 import com.lightbend.lagom.scaladsl.api.broker.kafka.{KafkaProperties, PartitionKeyStrategy}
-import com.lightbend.lagom.scaladsl.api.transport.Method
 import com.lightbend.lagom.scaladsl.api.{Service, ServiceCall}
 import play.api.libs.json.{Format, Json}
+
 
 object CatalogService  {
   val TOPIC_NAME = "catalog"
@@ -23,20 +23,35 @@ trait CatalogService extends Service {
 
   def getProduct(id: String): ServiceCall[NotUsed, Product]
 
+  def productTopic: Topic[ProductEventChanged]
+
 
 
 
   override final def descriptor = {
     import Service._
     // @formatter:off
-    named("store")
+    named("catalog")
       .withCalls(
         pathCall("/api/catalog/products/:id", getProduct _),
         pathCall("/api/catalog/products/", storeProduct )
       )
+      .withTopics(
+        topic(CatalogService.TOPIC_NAME, productTopic)
+          .addProperty(
+          KafkaProperties.partitionKeyStrategy,
+          PartitionKeyStrategy[ProductEventChanged](x => x.product.name)
+        )
+      )
       .withAutoAcl(true)
     // @formatter:on
   }
+}
+
+case class ProductEventChanged(product: Product)
+
+object ProductEventChanged {
+  implicit val format : Format[ProductEventChanged] = Json.format[ProductEventChanged]
 }
 
 case class Product( id: String, name: String, desc: String)

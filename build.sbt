@@ -36,3 +36,26 @@ lazy val `catalog-impl` = (project in file("catalog-impl"))
   .dependsOn(`catalog-api`)
 
 
+
+lazy val `search-api` = (project in file("search-api"))
+  .settings(
+    libraryDependencies ++= Seq(
+      lagomScaladslApi
+    )
+  )
+
+lazy val `search-impl` = (project in file("search-impl"))
+  .enablePlugins(LagomScala)
+  .settings(
+    libraryDependencies ++= Seq(
+      lagomScaladslKafkaBroker,
+      lagomScaladslTestKit,
+      macwire,
+      scalaTest
+    )
+  )
+  .settings(lagomForkedTestSettings: _*)
+  .dependsOn(`search-api`, `catalog-api`)
+
+
+
