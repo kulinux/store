@@ -5,8 +5,8 @@ import com.lightbend.lagom.scaladsl.api.ServiceLocator.NoServiceLocator
 import com.lightbend.lagom.scaladsl.broker.kafka.LagomKafkaComponents
 import com.lightbend.lagom.scaladsl.devmode.LagomDevModeComponents
 import com.lightbend.lagom.scaladsl.server._
-import com.lightbend.lagom.spi.persistence.OffsetStore
-import com.pako.store.catalog.api.SearchService
+import com.lightbend.lagom.spi.persistence.{InMemoryOffsetStore, OffsetStore}
+import com.pako.store.catalog.api.{CatalogService, SearchService}
 import com.softwaremill.macwire._
 import play.api.libs.ws.ahc.AhcWSComponents
 
@@ -31,9 +31,9 @@ abstract class SearchApplication(context: LagomApplicationContext)
   // Bind the service that this server provides
   override lazy val lagomServer = serverFor[SearchService](wire[SearchServiceImpl])
 
-  lazy val catalogService = serviceClient.implement[SearchService]
+  lazy val catalogService = serviceClient.implement[CatalogService]
 
-  override def offsetStore: OffsetStore = ???
+  override def offsetStore: OffsetStore = new InMemoryOffsetStore()
 }
 
 

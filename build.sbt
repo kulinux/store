@@ -10,7 +10,9 @@ val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4" % Test
 lazy val `store` = (project in file("."))
   .aggregate(
     `catalog-api`,
-    `catalog-impl`
+    `catalog-impl`,
+    `search-api`,
+    `search-impl`
   )
 
 
