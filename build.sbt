@@ -46,6 +46,26 @@ lazy val `search-api` = (project in file("search-api"))
     )
   )
 
+
+lazy val elastic4sVersion = "6.4.0"
+lazy val elasticDep = Seq(
+
+  "org.apache.logging.log4j" % "log4j-core" % "2.9.1",
+  "org.apache.logging.log4j" % "log4j-api" % "2.9.1",
+
+  "com.sksamuel.elastic4s" %% "elastic4s-core" % elastic4sVersion,
+
+  // for the http client
+  "com.sksamuel.elastic4s" %% "elastic4s-http" % elastic4sVersion,
+
+  // if you want to use reactive streams
+  "com.sksamuel.elastic4s" %% "elastic4s-http-streams" % elastic4sVersion,
+
+  // testing
+  "com.sksamuel.elastic4s" %% "elastic4s-testkit" % elastic4sVersion,
+  "com.sksamuel.elastic4s" %% "elastic4s-embedded" % elastic4sVersion
+)
+
 lazy val `search-impl` = (project in file("search-impl"))
   .enablePlugins(LagomScala)
   .settings(
@@ -54,7 +74,7 @@ lazy val `search-impl` = (project in file("search-impl"))
       lagomScaladslTestKit,
       macwire,
       scalaTest
-    )
+    ) ++ elasticDep
   )
   .settings(lagomForkedTestSettings: _*)
   .dependsOn(`search-api`, `catalog-api`)

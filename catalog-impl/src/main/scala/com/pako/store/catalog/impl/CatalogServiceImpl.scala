@@ -26,9 +26,11 @@ class CatalogServiceImpl(persistentEntityRegistry: PersistentEntityRegistry)(imp
 
   override def productTopic: Topic[ProductEventChanged] =
     TopicProducer.singleStreamWithOffset {
-      fromOffset =>
+      fromOffset => {
+        println(s"Produce Topic from $fromOffset")
         persistentEntityRegistry.eventStream(ProductEvent.Tag, fromOffset)
           .map(ev => (convertEvent(ev), ev.offset))
+      }
     }
 
 
