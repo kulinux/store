@@ -44,7 +44,7 @@ class SearchServiceImpl(catalogService: CatalogService,
 
   def store(event: ProductEventChanged) : Future[Done]  = {
     println(s"Store product $event.product")
-    elastic.execute{
+    val res = elastic.execute{
       indexInto("products" / "product").fields(
         "id" -> event.product.id,
         "name" -> event.product.name,
@@ -53,6 +53,9 @@ class SearchServiceImpl(catalogService: CatalogService,
     }
     .filter(_.isSuccess)
     .flatMap(_ => Future.successful(Done))
+
+    res.onComplete(x => println(s"Tras search $x"))
+    res
   }
 
 }
