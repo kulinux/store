@@ -8,7 +8,7 @@ import play.api.libs.json.{Format, Json}
 
 trait SearchService extends Service {
 
-  def search(q: String) : ServiceCall[NotUsed, SearchResult]
+  def searchProduct(q: String) : ServiceCall[NotUsed, SearchResult]
 
 
   override final def descriptor = {
@@ -16,7 +16,7 @@ trait SearchService extends Service {
     // @formatter:off
     named("search")
       .withCalls(
-        pathCall("/api/search/products/:q", search _),
+        pathCall("/api/search/products/:q", searchProduct _),
       )
       .withAutoAcl(true)
     // @formatter:on

@@ -19,13 +19,11 @@ object CatalogService  {
   */
 trait CatalogService extends Service {
 
-  def storeProduct(): ServiceCall[Product, NotUsed]
+  def storeProduct(): ServiceCall[CatalogProduct, NotUsed]
 
-  def getProduct(id: String): ServiceCall[NotUsed, Product]
+  def getProduct(id: String): ServiceCall[NotUsed, CatalogProduct]
 
   def productTopic: Topic[ProductEventChanged]
-
-
 
 
   override final def descriptor = {
@@ -48,15 +46,15 @@ trait CatalogService extends Service {
   }
 }
 
-case class ProductEventChanged(product: Product)
+case class ProductEventChanged(product: CatalogProduct)
 
 object ProductEventChanged {
   implicit val format : Format[ProductEventChanged] = Json.format[ProductEventChanged]
 }
 
-case class Product( id: String, name: String, desc: String)
+case class CatalogProduct(id: String, name: String, desc: String)
 
-object Product {
-  implicit val format: Format[Product] = Json.format[Product]
+object CatalogProduct {
+  implicit val format: Format[CatalogProduct] = Json.format[CatalogProduct]
 }
 

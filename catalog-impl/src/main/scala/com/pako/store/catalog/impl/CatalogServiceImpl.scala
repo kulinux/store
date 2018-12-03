@@ -13,13 +13,13 @@ import scala.concurrent.{ExecutionContext, Future}
 class CatalogServiceImpl(persistentEntityRegistry: PersistentEntityRegistry)(implicit ec: ExecutionContext)
   extends CatalogService {
 
-  override def storeProduct(): ServiceCall[api.Product, NotUsed] = ServiceCall { product =>
+  override def storeProduct(): ServiceCall[api.CatalogProduct, NotUsed] = ServiceCall { product =>
     val ref = persistentEntityRegistry.refFor[CatalogEntity](product.id)
     ref.ask(AddProduct(product))
     Future.successful(NotUsed)
   }
 
-  override def getProduct(id: String): ServiceCall[NotUsed, api.Product] = ServiceCall { _ =>
+  override def getProduct(id: String): ServiceCall[NotUsed, api.CatalogProduct] = ServiceCall { _ =>
     val ref = persistentEntityRegistry.refFor[CatalogEntity](id)
     ref.ask(GetProduct(id)).map(p => p)
   }

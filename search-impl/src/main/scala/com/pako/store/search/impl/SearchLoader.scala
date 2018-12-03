@@ -1,4 +1,4 @@
-package com.pako.store.catalog.impl
+package com.pako.store.search.impl
 
 import com.lightbend.lagom.scaladsl.api.ServiceLocator
 import com.lightbend.lagom.scaladsl.api.ServiceLocator.NoServiceLocator

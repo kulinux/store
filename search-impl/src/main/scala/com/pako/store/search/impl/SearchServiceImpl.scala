@@ -1,4 +1,4 @@
-package com.pako.store.catalog.impl
+package com.pako.store.search.impl
 
 import akka.{Done, NotUsed}
 import akka.stream.scaladsl.Flow
@@ -21,10 +21,13 @@ class SearchServiceImpl(catalogService: CatalogService,
     LoggerFactory.getLogger(classOf[SearchApplication])
 
 
-  override def search(q: String) : ServiceCall[NotUsed, SearchResult] = {
+  override def searchProduct(q: String) : ServiceCall[NotUsed, SearchResult] = {
+
+    //searchWithType("products" / "product").query(q)
+    //println(response.result.hits.hits.head.sourceAsString)
 
     val sr: Future[SearchResult] = elastic.execute(
-      searchWithType("products" / "product").query(q)
+      search("products" ).query(q)
     ).filter(_.isSuccess)
     .map(_.result)
     .map(sr => sr.hits.hits.map(_.fields("id").toString))

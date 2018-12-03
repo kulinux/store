@@ -24,7 +24,7 @@ class CatalogEntity extends PersistentEntity {
         }
       }
     }
-    .onReadOnlyCommand[GetProduct, api.Product] {
+    .onReadOnlyCommand[GetProduct, api.CatalogProduct] {
       case (GetProduct(id), ctx, state) => {
         ctx.reply(state.get.product)
       }
@@ -38,9 +38,9 @@ class CatalogEntity extends PersistentEntity {
 
 sealed trait ProductCommand[R] extends ReplyType[R]
 
-case class AddProduct(p: api.Product) extends ProductCommand[Done]
-case class GetProduct(id: String) extends ProductCommand[api.Product]
-case class ProductEvent(p: api.Product) extends AggregateEvent[ProductEvent] {
+case class AddProduct(p: api.CatalogProduct) extends ProductCommand[Done]
+case class GetProduct(id: String) extends ProductCommand[api.CatalogProduct]
+case class ProductEvent(p: api.CatalogProduct) extends AggregateEvent[ProductEvent] {
   override def aggregateTag = ProductEvent.Tag
 }
 
@@ -49,7 +49,7 @@ object ProductEvent {
   val Tag = AggregateEventTag[ProductEvent]
 }
 
-case class ProductState(product: api.Product) {
+case class ProductState(product: api.CatalogProduct) {
 }
 
 object StoreSerializerRegistry extends JsonSerializerRegistry {

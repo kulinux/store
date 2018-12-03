@@ -11,6 +11,10 @@ lazy val `store` = (project in file("."))
   .aggregate(
     `catalog-api`,
     `catalog-impl`,
+    `price-api`,
+    `price-impl`,
+    `customer-api`,
+    `customer-impl`,
     `search-api`,
     `search-impl`
   )
@@ -38,13 +42,47 @@ lazy val `catalog-impl` = (project in file("catalog-impl"))
   .dependsOn(`catalog-api`)
 
 
-
-lazy val `search-api` = (project in file("search-api"))
+lazy val `customer-api` = (project in file("customer-api"))
   .settings(
     libraryDependencies ++= Seq(
       lagomScaladslApi
     )
   )
+
+lazy val `customer-impl` = (project in file("customer-impl"))
+  .enablePlugins(LagomScala)
+  .settings(
+    libraryDependencies ++= Seq(
+      lagomScaladslPersistenceCassandra,
+      lagomScaladslKafkaBroker,
+      lagomScaladslTestKit,
+      macwire,
+      scalaTest
+    )
+  )
+  .settings(lagomForkedTestSettings: _*)
+  .dependsOn(`customer-api`, `catalog-api`)
+
+
+lazy val `price-api` = (project in file("price-api"))
+  .settings(
+    libraryDependencies ++= Seq(
+      lagomScaladslApi
+    )
+  ) .dependsOn(`customer-api`, `catalog-api`)
+
+lazy val `price-impl` = (project in file("price-impl"))
+  .enablePlugins(LagomScala)
+  .settings(
+    libraryDependencies ++= Seq(
+      lagomScaladslKafkaBroker,
+      lagomScaladslTestKit,
+      macwire,
+      scalaTest
+    )
+  )
+  .settings(lagomForkedTestSettings: _*)
+  .dependsOn(`price-api`, `catalog-api`, `customer-api`)
 
 
 lazy val elastic4sVersion = "6.4.0"
@@ -66,6 +104,15 @@ lazy val elasticDep = Seq(
   "com.sksamuel.elastic4s" %% "elastic4s-embedded" % elastic4sVersion
 )
 
+cleanFiles += new java.io.File("/tmp/elastic" )
+
+lazy val `search-api` = (project in file("search-api"))
+  .settings(
+    libraryDependencies ++= Seq(
+      lagomScaladslApi
+    )
+  )
+
 lazy val `search-impl` = (project in file("search-impl"))
   .enablePlugins(LagomScala)
   .settings(
@@ -78,6 +125,3 @@ lazy val `search-impl` = (project in file("search-impl"))
   )
   .settings(lagomForkedTestSettings: _*)
   .dependsOn(`search-api`, `catalog-api`)
-
-
-

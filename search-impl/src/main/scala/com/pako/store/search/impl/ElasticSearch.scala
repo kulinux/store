@@ -24,6 +24,8 @@ object ElasticLocalNode {
           textField("desc"),
         )
       )
+        .shards(1)
+        .replicas(1)
     }.await
     if( res.isError ) {
       log.error("Error create elastic search index",  res.error)
