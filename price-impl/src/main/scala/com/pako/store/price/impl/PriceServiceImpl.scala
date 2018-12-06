@@ -9,14 +9,14 @@ import com.pako.store.catalog.api.CatalogProduct
 
 import scala.concurrent.ExecutionContext
 
-class PriceServiceImpl(persistentEntityRegistry: PersistentEntityRegistry)(implicit ec: ExecutionContext)
+class PriceServiceImpl(implicit ec: ExecutionContext)
   extends PriceService {
 
   override def naivePrice(product: CatalogProduct): ServiceCall[NotUsed, Price] = ???
 
   override def price(product: CatalogProduct): ServiceCall[NotUsed, Price] = ???
 
-  override def price(customer: Customer, product: CatalogProduct): ServiceCall[NotUsed, Price] = ???
+  override def priceCustomer(customer: Customer, product: CatalogProduct): ServiceCall[NotUsed, Price] = ???
 
-  override def price(customer: Customer, product: Seq[CatalogProduct]): ServiceCall[NotUsed, Price] = ???
+  override def priceCart(customer: Customer, product: Seq[CatalogProduct]): ServiceCall[NotUsed, Price] = ???
 }

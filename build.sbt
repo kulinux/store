@@ -1,3 +1,5 @@
+import org.apache.commons.io.FileUtils
+
 organization in ThisBuild := "com.pako"
 version in ThisBuild := "1.0-SNAPSHOT"
 
@@ -9,9 +11,10 @@ val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4" % Test
 
 lazy val cleanKafkaTemp = taskKey[Unit]("Delete Kafka Temporary")
 cleanKafkaTemp := {
-  println("Delete dir!")
-  val toDelete = new java.io.File("target/lagom-dynamic-projects/")
-  toDelete.delete()
+  val file = "target/lagom-dynamic-projects/"
+  val toDelete = new java.io.File( file )
+  val res = FileUtils.deleteDirectory(toDelete)
+  println(s"Delete dir ${file} - ${res}!")
 }
 
 lazy val `store` = (project in file("."))

@@ -19,15 +19,15 @@ trait PriceService extends Service {
 
   def price(product: CatalogProduct): ServiceCall[NotUsed, Price]
 
-  def price(customer: Customer, product: CatalogProduct): ServiceCall[NotUsed, Price]
+  def priceCustomer(customer: Customer, product: CatalogProduct): ServiceCall[NotUsed, Price]
 
-  def price(customer: Customer, product: Seq[CatalogProduct]): ServiceCall[NotUsed, Price]
+  def priceCart(customer: Customer, product: Seq[CatalogProduct]): ServiceCall[NotUsed, Price]
 
 
   override final def descriptor = {
     import Service._
     // @formatter:off
-    named("catalog")
+    named("price")
       .withCalls(
       )
       .withTopics(
@@ -41,7 +41,7 @@ case class Price(product: Seq[CatalogProduct], customer: Option[Customer], qty: 
 
 
 object Price {
-  implicit val formatSeq: Format[Seq[CatalogProduct]] = Json.format[Seq[CatalogProduct]]
+  implicit val formatSeq: Format[CatalogProduct] = Json.format[CatalogProduct]
   implicit val format: Format[Price] = Json.format[Price]
 }
 
