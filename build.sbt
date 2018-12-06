@@ -7,6 +7,13 @@ scalaVersion in ThisBuild := "2.12.4"
 val macwire = "com.softwaremill.macwire" %% "macros" % "2.3.0" % "provided"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4" % Test
 
+lazy val cleanKafkaTemp = taskKey[Unit]("Delete Kafka Temporary")
+cleanKafkaTemp := {
+  println("Delete dir!")
+  val toDelete = new java.io.File("target/lagom-dynamic-projects/")
+  toDelete.delete()
+}
+
 lazy val `store` = (project in file("."))
   .aggregate(
     `catalog-api`,
@@ -17,7 +24,10 @@ lazy val `store` = (project in file("."))
     `customer-impl`,
     `search-api`,
     `search-impl`
+  ).settings(
+    (ThisBuild / runAll) := ((ThisBuild / runAll) dependsOn cleanKafkaTemp).value
   )
+
 
 
 lazy val `catalog-api` = (project in file("catalog-api"))

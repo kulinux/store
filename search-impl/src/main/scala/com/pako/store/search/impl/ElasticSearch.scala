@@ -13,8 +13,9 @@ object ElasticLocalNode {
 
 
   System.setProperty("es.set.netty.runtime.available.processors", "false")
-  val node = LocalNode("tmp", "/tmp/elastic")
-  val client = {
+  lazy val node = LocalNode("Store", "/tmp/elastic")
+  lazy val client = {
+    println("Client Created")
     val client = node.client(shutdownNodeOnClose = true)
     val res = client.execute {
       createIndex("products").mappings(
@@ -24,8 +25,8 @@ object ElasticLocalNode {
           textField("desc"),
         )
       )
-        .shards(1)
-        .replicas(1)
+      .shards(1)
+      .replicas(1)
     }.await
     if( res.isError ) {
       log.error("Error create elastic search index",  res.error)

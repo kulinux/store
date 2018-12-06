@@ -30,7 +30,7 @@ class SearchServiceImpl(catalogService: CatalogService,
       search("products" ).query(q)
     ).filter(_.isSuccess)
     .map(_.result)
-    .map(sr => sr.hits.hits.map(_.fields("id").toString))
+    .map(sr => sr.hits.hits.map(_.sourceAsMap("id").toString))
     .map(res => SearchResult(res.toSeq))
 
     ServiceCall { q => sr }
