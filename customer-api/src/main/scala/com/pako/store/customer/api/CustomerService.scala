@@ -22,7 +22,7 @@ trait CustomerService extends Service {
 
   def getCustomer(id: String): ServiceCall[NotUsed, Customer]
 
-  def storeProduct(id: String): ServiceCall[Customer, NotUsed]
+  def storeCustomer(id: String): ServiceCall[Customer, NotUsed]
 
 
   override final def descriptor = {

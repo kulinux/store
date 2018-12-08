@@ -138,3 +138,5 @@ lazy val `search-impl` = (project in file("search-impl"))
   )
   .settings(lagomForkedTestSettings: _*)
   .dependsOn(`search-api`, `catalog-api`)
+
+

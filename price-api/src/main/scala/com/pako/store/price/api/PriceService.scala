@@ -15,13 +15,13 @@ import play.api.libs.json.{Format, Json}
   */
 trait PriceService extends Service {
 
-  def naivePrice(product: CatalogProduct): ServiceCall[NotUsed, Price]
+  def naivePrice: ServiceCall[CatalogProduct, Price]
 
-  def price(product: CatalogProduct): ServiceCall[NotUsed, Price]
+  def price: ServiceCall[CatalogProduct, Price]
 
-  def priceCustomer(customer: Customer, product: CatalogProduct): ServiceCall[NotUsed, Price]
+  def priceCustomer(customer: String): ServiceCall[CatalogProduct, Price]
 
-  def priceCart(customer: Customer, product: Seq[CatalogProduct]): ServiceCall[NotUsed, Price]
+  def priceCart(customer: String): ServiceCall[Seq[CatalogProduct], Price]
 
 
   override final def descriptor = {

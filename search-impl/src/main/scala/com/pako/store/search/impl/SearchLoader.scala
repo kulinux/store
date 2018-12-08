@@ -7,7 +7,6 @@ import com.lightbend.lagom.scaladsl.devmode.LagomDevModeComponents
 import com.lightbend.lagom.scaladsl.server._
 import com.lightbend.lagom.spi.persistence.{InMemoryOffsetStore, OffsetStore}
 import com.pako.store.catalog.api.{CatalogService, SearchService}
-import com.pako.store.search.impl.ElasticLocalNode
 import com.softwaremill.macwire._
 import play.api.libs.ws.ahc.AhcWSComponents
 

@@ -13,8 +13,8 @@ object ElasticLocalNode {
 
 
   System.setProperty("es.set.netty.runtime.available.processors", "false")
-  lazy val node = LocalNode("Store", "/tmp/elastic")
-  lazy val client = {
+  val node = LocalNode("Store", "/tmp/elastic")
+  val client = {
     println("Client Created")
     val client = node.client(shutdownNodeOnClose = true)
     val res = client.execute {

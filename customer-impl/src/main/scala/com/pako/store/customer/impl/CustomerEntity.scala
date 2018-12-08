@@ -4,7 +4,6 @@ import akka.Done
 import com.lightbend.lagom.scaladsl.persistence.PersistentEntity.ReplyType
 import com.lightbend.lagom.scaladsl.persistence._
 import com.lightbend.lagom.scaladsl.playjson.{JsonSerializer, JsonSerializerRegistry}
-import com.pako.store.catalog.api
 import com.pako.store.customer.api.Customer
 import play.api.libs.json.Json
 

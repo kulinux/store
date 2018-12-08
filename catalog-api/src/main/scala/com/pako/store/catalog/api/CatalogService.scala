@@ -52,7 +52,7 @@ object ProductEventChanged {
   implicit val format : Format[ProductEventChanged] = Json.format[ProductEventChanged]
 }
 
-case class CatalogProduct(id: String, name: String, desc: String)
+case class CatalogProduct(id: String, name: String, desc: String, basePrice: Double)
 
 object CatalogProduct {
   implicit val format: Format[CatalogProduct] = Json.format[CatalogProduct]

@@ -15,7 +15,7 @@ class CustomerServiceImpl(persistentEntityRegistry: PersistentEntityRegistry)(im
     ref.ask(GetCustomer(id)).map(p => p)
   }
 
-  override def storeProduct(id: String): ServiceCall[Customer, NotUsed] = ServiceCall { product =>
+  override def storeCustomer(id: String): ServiceCall[Customer, NotUsed] = ServiceCall { product =>
     val ref = persistentEntityRegistry.refFor[CustomerEntity](product.id)
     ref.ask(AddCustomer(product))
     Future.successful(NotUsed)
