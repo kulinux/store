@@ -10,5 +10,6 @@ bin
 .tmpBin
 .factorypath
 .settings
+.g8
 logs
 .idea

@@ -26,7 +26,8 @@ lazy val `store` = (project in file("."))
     `customer-api`,
     `customer-impl`,
     `search-api`,
-    `search-impl`
+    `search-impl`,
+    `www`
   ).settings(
     (ThisBuild / runAll) := ((ThisBuild / runAll) dependsOn cleanKafkaTemp).value
   )
@@ -139,4 +140,20 @@ lazy val `search-impl` = (project in file("search-impl"))
   .settings(lagomForkedTestSettings: _*)
   .dependsOn(`search-api`, `catalog-api`)
 
+
+lazy val `www` = (project in file("www"))
+  .enablePlugins(PlayScala, LagomPlay)
+  .dependsOn(`catalog-api`, `customer-api`, `price-api`, `search-api`)
+  .settings(
+    libraryDependencies ++= Seq(
+      lagomScaladslServer,
+      macwire,
+      scalaTest,
+
+      "org.ocpsoft.prettytime" % "prettytime" % "3.2.7.Final",
+      "org.webjars" % "foundation" % "6.2.3",
+      "org.webjars" % "foundation-icon-fonts" % "d596a3cfb3"
+    )
+  )
+  .enablePlugins(LagomScala)
 
