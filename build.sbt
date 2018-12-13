@@ -155,5 +155,6 @@ lazy val `www` = (project in file("www"))
       "org.webjars" % "foundation-icon-fonts" % "d596a3cfb3"
     )
   )
+  .settings(lagomServicePort := 80)
   .enablePlugins(LagomScala)
 
