@@ -10,6 +10,8 @@ trait SearchService extends Service {
 
   def searchProduct(q: String) : ServiceCall[NotUsed, SearchResult]
 
+  def searchByTag(tag: String) : ServiceCall[NotUsed, SearchResult]
+
 
   override final def descriptor = {
     import Service._
@@ -17,6 +19,7 @@ trait SearchService extends Service {
     named("search")
       .withCalls(
         pathCall("/api/search/products/:q", searchProduct _),
+        pathCall("/api/search/tag/:tag", searchByTag _),
       )
       .withAutoAcl(true)
     // @formatter:on

@@ -23,6 +23,7 @@ object ElasticLocalNode {
           keywordField("id"),
           textField("name"),
           textField("desc"),
+          keywordField("tags")
         )
       )
       .shards(1)

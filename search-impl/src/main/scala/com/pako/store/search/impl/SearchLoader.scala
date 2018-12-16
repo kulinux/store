@@ -8,7 +8,10 @@ import com.lightbend.lagom.scaladsl.server._
 import com.lightbend.lagom.spi.persistence.{InMemoryOffsetStore, OffsetStore}
 import com.pako.store.catalog.api.{CatalogService, SearchService}
 import com.softwaremill.macwire._
+import play.api.inject.ApplicationLifecycle
 import play.api.libs.ws.ahc.AhcWSComponents
+
+import scala.concurrent.Future
 
 class SearchLoader extends LagomApplicationLoader {
 
@@ -36,6 +39,10 @@ abstract class SearchApplication(context: LagomApplicationContext)
   lazy val elastic = ElasticLocalNode.client
 
   override def offsetStore: OffsetStore = new InMemoryOffsetStore()
+
+  applicationLifecycle.addStopHook(() => Future {
+    ElasticLocalNode.node.stop(false)
+  })
 }
 
 

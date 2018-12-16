@@ -5,9 +5,9 @@ import javax.inject._
 import play.api.libs.json.{Format, Json}
 import play.api.mvc._
 
-import scala.concurrent.{Await, ExecutionContext, Future}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
+
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -20,6 +20,9 @@ class HomeController @Inject()
     catalogService: CatalogService,
     searchService: SearchService,
   ) extends AbstractController(cc) {
+
+
+  implicit lazy val executionContext = defaultExecutionContext
 
 
   val dummyProduct = Seq(
@@ -36,19 +39,16 @@ class HomeController @Inject()
 
     val contentProduct : Future[Seq[CatalogProductJson]] =
       sr.map( x => {
-        println(s"Busco contenido para $x")
         val invokes: Seq[Future[CatalogProduct]] = x.ids.map(catalogService.getProduct(_).invoke())
         val all : Future[Seq[CatalogProduct]] = Future.sequence(invokes)
         all
         }
       ).map( Await.result(_, 1 second ))
       .map( x => x.map( cp => {
-        println(s"Encontre uno $cp")
         CatalogProductJson(cp.id, cp.name, cp.desc)
       }) )
 
     contentProduct.map( jsons => Ok(Json.toJson(jsons)))
-
   }
 }
 

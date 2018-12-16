@@ -2,5 +2,6 @@
 	"id": "UUUUU",
 	"name": "UUUUUU Jamon de Teruel 2",
 	"desc": "UUUUUU Jamon de Teruel de 10 Kg de 10 años de maduración, yea",
-	"basePrice": 13.44
+	"basePrice": 13.44,
+	"tags": ["HOME", "COMIDA", "JAMON"]
 }
