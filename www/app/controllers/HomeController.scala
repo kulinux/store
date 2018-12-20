@@ -35,7 +35,7 @@ class HomeController @Inject()
   }
 
   def products() = Action.async{
-    val sr = searchService.searchProduct("Jamon").invoke()
+    val sr = searchService.searchByTag("HOME").invoke()
 
     val contentProduct : Future[Seq[CatalogProductJson]] =
       sr.map( x => {
@@ -43,7 +43,7 @@ class HomeController @Inject()
         val all : Future[Seq[CatalogProduct]] = Future.sequence(invokes)
         all
         }
-      ).map( Await.result(_, 1 second ))
+      ).map( Await.result(_, 1 second )) //Avoid this!!!
       .map( x => x.map( cp => {
         CatalogProductJson(cp.id, cp.name, cp.desc)
       }) )
