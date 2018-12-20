@@ -1,13 +1,37 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+
 import logo from './logo.svg';
 import './App.css';
 import Small from './products/small/Small';
 
 
-const DummyProduct = {
-  name: 'Jamon de Bellota',
-  description: 'Jamón de bellota pata negra procedente de cerdos ibéricos puros 100 %, criados en libertad y alimentados con bellotas en montanera en las dehesas de la Sierra de Huelva, actual Parque Natural Sierra de Aracena y Picos de Aroche, donde se encuentra Jabugo. Elaboración tradicional siguiendo el proceso artesanal de los maestros jamoneros y lenta curación en secadero natural. (Precinto negro)',
-  price: 34.55
+
+class ListOfProducts extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      products: []
+    }
+  }
+
+  componentDidMount() {
+    axios.get(`/products.json`)
+      .then(res => {
+        const products = res.data;
+        this.setState({ products });
+      })
+  }
+
+  render() {
+    return (
+      <div>
+        {this.state.products.map(product => <div><Small {...product}/></div>)}
+      </div>
+
+    )
+  }
 }
 
 class App extends Component {
@@ -19,7 +43,7 @@ class App extends Component {
             Store
           </p>
         </header>
-        <Small {...DummyProduct}/>
+        <ListOfProducts/>
       </div>
     );
   }
