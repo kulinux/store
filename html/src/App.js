@@ -1,38 +1,12 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+
+import {List} from './products/list/List'
 
 import logo from './logo.svg';
 import './App.css';
-import Small from './products/small/Small';
 
 
 
-class ListOfProducts extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      products: []
-    }
-  }
-
-  componentDidMount() {
-    axios.get(`/products.json`)
-      .then(res => {
-        const products = res.data;
-        this.setState({ products });
-      })
-  }
-
-  render() {
-    return (
-      <div>
-        {this.state.products.map(product => <div><Small {...product}/></div>)}
-      </div>
-
-    )
-  }
-}
 
 class App extends Component {
   render() {
@@ -43,7 +17,7 @@ class App extends Component {
             Store
           </p>
         </header>
-        <ListOfProducts/>
+        <List/>
       </div>
     );
   }

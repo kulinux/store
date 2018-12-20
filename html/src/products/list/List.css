@@ -1,0 +1,11 @@
+
+.List {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+}
+
+.List-item {
+   flex: 1 0 21%;
+}
