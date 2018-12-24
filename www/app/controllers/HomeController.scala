@@ -52,7 +52,7 @@ class HomeController @Inject()
   }
 }
 
-case class CatalogProductJson(id: String, name: String, desc: String)
+case class CatalogProductJson(id: String, name: String, description: String)
 
 object CatalogProductJson {
   implicit val format: Format[CatalogProductJson] = Json.format[CatalogProductJson]

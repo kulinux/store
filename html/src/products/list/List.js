@@ -15,7 +15,7 @@ export class List extends Component {
   }
 
   componentDidMount() {
-    axios.get(`/products.json`)
+    axios.get(this.props.url)
       .then(res => {
         const products = res.data;
         this.setState({ products });

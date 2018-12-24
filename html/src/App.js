@@ -17,7 +17,7 @@ class App extends Component {
             Store
           </p>
         </header>
-        <List/>
+        <List url={process.env.REACT_APP_API + "/home/products"}/>
       </div>
     );
   }
