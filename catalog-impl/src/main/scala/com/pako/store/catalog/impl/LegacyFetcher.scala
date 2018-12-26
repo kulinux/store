@@ -10,7 +10,7 @@ import play.api.libs.ws.WSClient
 import scala.concurrent.ExecutionContext
 
 
-case class LegacyProduct(_id: String, name: String, description: String, price: Double)
+case class LegacyProduct(_id: String, name: String, description: String, price: Double, tag: String)
 object LegacyProduct {
   implicit val format = Json.reads[LegacyProduct]
 }
@@ -37,8 +37,7 @@ class LegacyFetcher( ws: WSClient,
       }
       .map( lps =>
         lps.get.foreach{ lp =>
-          log.info(s"One product from legacy to store $lp")
-          val cp = CatalogProduct(lp._id, lp.name, lp.description, lp.price)
+          val cp = CatalogProduct(lp._id, lp.name, lp.description, lp.price, Seq(lp.tag))
           storeProduct(cp)
         }
       )

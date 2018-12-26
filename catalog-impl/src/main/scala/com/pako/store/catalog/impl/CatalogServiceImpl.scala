@@ -68,7 +68,7 @@ class CatalogServiceImpl(
   }
 
   def schedule(): Unit = {
-    system.scheduler.schedule(5 seconds, 5 seconds) {
+    system.scheduler.schedule(5 seconds, 20 seconds) {
       fetcher.fetchAllProduct()
     }
   }

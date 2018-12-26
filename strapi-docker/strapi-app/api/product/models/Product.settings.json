@@ -13,13 +13,22 @@
       "default": "",
       "type": "string"
     },
-    "description": {
-      "default": "",
-      "type": "string"
-    },
     "price": {
       "default": "",
       "type": "decimal"
+    },
+    "description": {
+      "default": "",
+      "type": "text"
+    },
+    "tag": {
+      "default": "",
+      "type": "enumeration",
+      "enum": [
+        "",
+        "HOME",
+        "OFFER"
+      ]
     }
   }
 }

@@ -35,8 +35,8 @@ class HomeController @Inject()
   }
 
   def products() = Action.async{
-    //val sr = searchService.searchByTag("HOME").invoke()
-    val sr = searchService.searchProduct("Jamon").invoke()
+    val sr = searchService.searchByTag("HOME").invoke()
+    //val sr = searchService.searchProduct("Jamon").invoke()
 
     val contentProduct : Future[Seq[CatalogProductJson]] =
       sr.map( x => {
