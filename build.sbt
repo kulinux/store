@@ -17,6 +17,9 @@ cleanKafkaTemp := {
   println(s"Delete dir ${file} - ${res}!")
 }
 
+
+lagomUnmanagedServices in ThisBuild := Map("LegacyProduct" -> "http://localhost:1337/products")
+
 lazy val `store` = (project in file("."))
   .aggregate(
     `catalog-api`,

@@ -56,7 +56,7 @@ case class CatalogProduct(id: String,
                           name: String,
                           desc: String,
                           basePrice: Double,
-                          tags: Seq[String]
+                          tags: Seq[String] = Seq()
                          )
 
 object CatalogProduct {
