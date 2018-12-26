@@ -63,8 +63,9 @@ class SearchServiceImpl(catalogService: CatalogService,
         "id" -> event.product.id,
         "name" -> event.product.name,
         "desc" -> event.product.desc,
-        "tags" -> event.product.tags
-      ).refresh(RefreshPolicy.Immediate)
+        "tags" -> event.product.tags )
+        .id(event.product.id)
+        .refresh(RefreshPolicy.Immediate)
     }
     .filter(_.isSuccess)
     .flatMap(_ => Future.successful(Done))

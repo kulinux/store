@@ -1,24 +1,24 @@
 package com.pako.store.catalog.impl
 
-import java.net.URI
 
 import akka.NotUsed
+import akka.actor.ActorSystem
 import com.lightbend.lagom.scaladsl.api.{ServiceCall, ServiceLocator}
 import com.lightbend.lagom.scaladsl.api.broker.Topic
 import com.lightbend.lagom.scaladsl.broker.TopicProducer
 import com.lightbend.lagom.scaladsl.persistence.{EventStreamElement, PersistentEntityRegistry}
 import com.pako.store.catalog.api
-import com.pako.store.catalog.api.{CatalogProduct, CatalogService, ProductEventChanged}
-import play.api.libs.json.{JsArray, Json}
+import com.pako.store.catalog.api.{CatalogService, ProductEventChanged}
 import play.api.libs.ws.WSClient
 
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Success
+import scala.concurrent.duration._
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 class CatalogServiceImpl(
                           persistentEntityRegistry: PersistentEntityRegistry,
                           serviceLocator: ServiceLocator,
-                          ws: WSClient
+                          ws: WSClient,
+                          system: ActorSystem
   )(implicit ec: ExecutionContext)
   extends CatalogService {
 
@@ -51,35 +51,27 @@ class CatalogServiceImpl(
     }
   }
 
-  init()
+  val fetcher: LegacyFetcher = init()
 
-  case class LegacyProduct(_id: String, name: String, description: String, price: Double)
-  object LegacyProduct {
-    implicit val format = Json.reads[LegacyProduct]
-  }
+  schedule()
 
-  def fetchAllProduct(uri: URI): Unit = {
-    ws.url(uri.toString)
-      .get()
-      .map{ response =>
-        val json = response.json.as[JsArray]
-        response.json.validate[Seq[LegacyProduct]]
-      }
-      .map( lps =>
-        lps.get.foreach{ lp =>
-          val cp = CatalogProduct(lp._id, lp.name, lp.description, lp.price)
-          storeProduct().invoke(cp)
-        }
-      )
-  }
-
-  def init(): Unit = {
-    serviceLocator.locate( "LegacyProduct" )
+  def init() = {
+    val lFut = serviceLocator.locate( "LegacyProduct" )
       .filter(_.isDefined)
       .map(_.get)
-      .onComplete{
-        case Success(value) => fetchAllProduct(value)
-        case err => println(s"Encontrado Error ${err}")
+      .map{ value =>
+          new LegacyFetcher(ws, value, storeProduct().invoke(_))
       }
+
+    Await.result(lFut, 1 second )
+
   }
+
+  def schedule(): Unit = {
+    system.scheduler.schedule(5 seconds, 5 seconds) {
+      fetcher.fetchAllProduct()
+    }
+  }
+
+
 }
