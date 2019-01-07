@@ -19,7 +19,12 @@ class CatalogEntity extends PersistentEntity {
   override def behavior: Behavior = Actions()
     .onCommand[AddProduct, Done] {
       case (AddProduct(product), ctx, state) => {
-        ctx.thenPersist(ProductEvent(product)) {
+        ctx.thenPersist(ProductEvent(product, false)) {
+          evt => ctx.reply(Done)
+        }
+      }
+      case (RemoveProduct(id), ctx, state) if(state.isDefined) => {
+        ctx.thenPersist(ProductEvent(state.get.product, true)) {
           evt => ctx.reply(Done)
         }
       }
@@ -30,7 +35,7 @@ class CatalogEntity extends PersistentEntity {
       }
     }
     .onEvent {
-      case (ProductEvent(product), state) => {
+      case (ProductEvent(product, removed), state) if(removed == false) => {
         Some(ProductState(product))
       }
     }
@@ -40,7 +45,9 @@ sealed trait ProductCommand[R] extends ReplyType[R]
 
 case class AddProduct(p: api.CatalogProduct) extends ProductCommand[Done]
 case class GetProduct(id: String) extends ProductCommand[api.CatalogProduct]
-case class ProductEvent(p: api.CatalogProduct) extends AggregateEvent[ProductEvent] {
+case class RemoveProduct(id: String) extends ProductCommand[api.CatalogProduct]
+
+case class ProductEvent(p: api.CatalogProduct, removed: Boolean) extends AggregateEvent[ProductEvent] {
   override def aggregateTag = ProductEvent.Tag
 }
 

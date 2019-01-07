@@ -29,6 +29,12 @@
         "HOME",
         "OFFER"
       ]
+    },
+    "image": {
+      "collection": "file",
+      "via": "related",
+      "plugin": "upload",
+      "required": false
     }
   }
 }

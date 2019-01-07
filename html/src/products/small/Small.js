@@ -12,6 +12,9 @@ class Small extends Component {
           <h2>{this.props.price}</h2>
           <p>{this.props.description}</p>
         </header>
+        {this.props.images.map(image =>
+          <img src={process.env.REACT_APP_API + "/home/image/" + image}/>
+        )}
       </article>
     );
   }

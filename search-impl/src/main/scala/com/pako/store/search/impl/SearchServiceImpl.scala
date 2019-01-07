@@ -58,20 +58,28 @@ class SearchServiceImpl(catalogService: CatalogService,
 
   private def store(event: ProductEventChanged) : Future[Done]  = {
     println(s"Store product $event.product")
-    val res = elastic.execute{
-      indexInto("products" / "product").fields(
-        "id" -> event.product.id,
-        "name" -> event.product.name,
-        "desc" -> event.product.desc,
-        "tags" -> event.product.tags )
-        .id(event.product.id)
-        .refresh(RefreshPolicy.Immediate)
-    }
-    .filter(_.isSuccess)
-    .flatMap(_ => Future.successful(Done))
 
-    res.onComplete(x => println(s"Tras search $x"))
-    res
+    if( event.removed == false ) {
+      return elastic.execute{
+        indexInto("products" / "product").fields(
+          "id" -> event.product.id,
+          "name" -> event.product.name,
+          "desc" -> event.product.desc,
+          "tags" -> event.product.tags )
+          .id(event.product.id)
+          .refresh(RefreshPolicy.Immediate)
+      }
+      .filter(_.isSuccess)
+      .flatMap(_ => Future.successful(Done))
+    } else {
+      return elastic.execute{
+        deleteById("products",
+          "product", event.product.id)
+          .refresh(RefreshPolicy.Immediate)
+      }
+      .filter(_.isSuccess)
+      .flatMap(_ => Future.successful(Done))
+    }
   }
 
 }

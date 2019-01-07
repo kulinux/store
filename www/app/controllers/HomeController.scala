@@ -1,7 +1,10 @@
 package controllers
 
+import akka.stream.scaladsl.Source
+import akka.util.ByteString
 import com.pako.store.catalog.api.{CatalogProduct, CatalogService, SearchService}
 import javax.inject._
+import play.api.http.HttpEntity
 import play.api.libs.json.{Format, Json}
 import play.api.mvc._
 
@@ -26,12 +29,29 @@ class HomeController @Inject()
 
 
   val dummyProduct = Seq(
-    CatalogProductJson("1", "name1", "desc1"),
-    CatalogProductJson("2", "name2", "desc2")
+    CatalogProductJson("1", "name1", "desc1", Seq()),
+    CatalogProductJson("2", "name2", "desc2", Seq())
   )
 
   def index() = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.index())
+  }
+
+  def image(image: String) = Action.async {
+      catalogService.image.invoke(image)
+      .map(stream =>
+        HttpEntity.Streamed(
+          stream,
+          None,
+          Some("image/jpeg")
+        )
+      )
+      .map( body =>
+        Result (
+          ResponseHeader(200, Map.empty),
+          body
+        )
+      )
   }
 
   def products() = Action.async{
@@ -46,14 +66,14 @@ class HomeController @Inject()
         }
       ).map( Await.result(_, 1 second )) //Avoid this!!!
       .map( x => x.map( cp => {
-        CatalogProductJson(cp.id, cp.name, cp.desc)
+        CatalogProductJson(cp.id, cp.name, cp.desc, cp.img)
       }) )
 
     contentProduct.map( jsons => Ok(Json.toJson(jsons)))
   }
 }
 
-case class CatalogProductJson(id: String, name: String, description: String)
+case class CatalogProductJson(id: String, name: String, description: String, images: Seq[String])
 
 object CatalogProductJson {
   implicit val format: Format[CatalogProductJson] = Json.format[CatalogProductJson]

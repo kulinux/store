@@ -3,6 +3,8 @@ package com.pako.store.catalog.impl
 
 import akka.NotUsed
 import akka.actor.ActorSystem
+import akka.stream.scaladsl.Source
+import akka.util.ByteString
 import com.lightbend.lagom.scaladsl.api.{ServiceCall, ServiceLocator}
 import com.lightbend.lagom.scaladsl.api.broker.Topic
 import com.lightbend.lagom.scaladsl.broker.TopicProducer
@@ -42,13 +44,24 @@ class CatalogServiceImpl(
       }
     }
 
+  override def removeProduct(id: String): ServiceCall[NotUsed, NotUsed] = ServiceCall { _ =>
+    val ref = persistentEntityRegistry.refFor[CatalogEntity](id)
+    ref.ask(RemoveProduct(id))
+    Future.successful(NotUsed)
+  }
+
+
   private def convertEvent(helloEvent: EventStreamElement[ProductEvent]): api.ProductEventChanged= {
     helloEvent.event match {
-      case ProductEvent(msg) => {
+      case ProductEvent(msg, removed) => {
         println(s"Encontre un evento!!! $msg")
-        api.ProductEventChanged(msg)
+        api.ProductEventChanged(msg, removed)
       }
     }
+  }
+
+  override def image(): ServiceCall[String, Source[ByteString, NotUsed]] = ServiceCall{ img =>
+    Future.successful(fetcher.image(img))
   }
 
   val fetcher: LegacyFetcher = init()
@@ -63,7 +76,7 @@ class CatalogServiceImpl(
           new LegacyFetcher(ws, value, storeProduct().invoke(_))
       }
 
-    Await.result(lFut, 1 second )
+    Await.result(lFut, 5 second )
 
   }
 
@@ -72,6 +85,5 @@ class CatalogServiceImpl(
       fetcher.fetchAllProduct()
     }
   }
-
 
 }
