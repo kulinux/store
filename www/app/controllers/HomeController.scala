@@ -29,8 +29,8 @@ class HomeController @Inject()
 
 
   val dummyProduct = Seq(
-    CatalogProductJson("1", "name1", "desc1", Seq()),
-    CatalogProductJson("2", "name2", "desc2", Seq())
+    CatalogProductJson("1", "name1", "desc1", 200.2, Seq()),
+    CatalogProductJson("2", "name2", "desc2", 100.0, Seq())
   )
 
   def index() = Action { implicit request: Request[AnyContent] =>
@@ -66,14 +66,14 @@ class HomeController @Inject()
         }
       ).map( Await.result(_, 1 second )) //Avoid this!!!
       .map( x => x.map( cp => {
-        CatalogProductJson(cp.id, cp.name, cp.desc, cp.img)
+        CatalogProductJson(cp.id, cp.name, cp.desc, cp.basePrice, cp.img)
       }) )
 
     contentProduct.map( jsons => Ok(Json.toJson(jsons)))
   }
 }
 
-case class CatalogProductJson(id: String, name: String, description: String, images: Seq[String])
+case class CatalogProductJson(id: String, name: String, description: String, price: Double, images: Seq[String])
 
 object CatalogProductJson {
   implicit val format: Format[CatalogProductJson] = Json.format[CatalogProductJson]

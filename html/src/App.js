@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {List} from './products/list/List'
+import List from './products/list/List'
 
 import logo from './logo.svg';
 import './App.css';

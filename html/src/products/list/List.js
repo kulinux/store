@@ -3,9 +3,28 @@ import axios from 'axios';
 
 import Small from '../small/Small';
 
-import './List.css'
 
-export class List extends Component {
+
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing.unit * 2,
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+});
+
+
+
+class List extends Component {
+
 
   constructor(props) {
     super(props);
@@ -23,15 +42,19 @@ export class List extends Component {
   }
 
   render() {
-    return (
-      <div className="List">
-        {this.state.products.map(product => <div className="List-item">
-          <Small {...product}/></div>
-        ) }
-      </div>
+    const { classes } = this.props;
 
+    return (
+      <div className={classes.root}>
+        <Grid container spacing={5}>
+          {this.state.products.map(product => <Grid item xs>
+              <Small {...product}/>
+            </Grid>
+          ) }
+        </Grid>
+      </div>
     )
   }
 }
 
-export default List;
+export default withStyles(styles)(List);
